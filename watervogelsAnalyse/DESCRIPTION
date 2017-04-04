@@ -1,0 +1,13 @@
+Package: watervogelsAnalyse
+Type: Package
+Title: analyse of watervogels telling data
+Version: 0.0-1
+Date: 2017-03-27
+Author: Laure Cougnaud
+Maintainer: Laure Cougnaud <laure.cougnaud@openanalytics.eu>
+Description: functies en rapport voor analyse of telling data van watervogels
+Imports:
+  ggplot2, 
+  plotly
+License: Software for Internal Use at Open Analytics NV
+RoxygenNote: 6.0.1

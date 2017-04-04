@@ -1,0 +1,141 @@
+---
+title: "Watervogels data"
+author: ""
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_depth: 4
+    number_sections: true
+    toc_float:
+      collapsed: true
+---
+
+
+```{r runDocument, echo = FALSE, eval = FALSE}
+
+	rm(list = ls())
+	system.time(rmarkdown::render("waterbirds.Rmd"))
+	
+```
+
+```{r inputDataTest, eval = FALSE, echo = FALSE, message = FALSE, warning=FALSE}
+
+	params <- list(
+		project = "Watervogeltellingen Zeeschelde", # survey$surveyname
+#		regio = '15 - Antwerpen', # occurrences$[regiocode - regio]
+		gebied = 'Galgenschoor (Schelde Lillo-Fort - Containerkaai) (RO)',
+#		soortgroep = c('Eenden', 'Rallen en Koeten'), # taxongroup$taxongroup, multiple
+		soort = c('Wilde Eend', 'Wintertaling'), # taxon$commonname, multiple
+		telseizoen = c("2005-06", "2006-07", "2007-08", "2008-09",
+			"2009-10", "2010-11", "2011-12", "2012-13", "2013-14", 
+			"2014-15", "2015-16")# occurrences$surveyseason, multiple
+	)
+	
+#	grep('Antwerpen', unique(dataAll$occurrences$regio), value = TRUE)
+	
+	pathData <- "../../data/Testdata waterbirds OpenAnalytics"
+	outputPath <- paste0("../../results/QC/")
+
+```
+
+```{r optionsChunkDoNotModify, echo = FALSE, message = FALSE, warning=FALSE}
+
+	## Chunk with options for knitr. This chunk should not be modified.
+
+	knitr::opts_chunk$set(
+		eval = TRUE,
+		echo = FALSE, 
+		message = FALSE,
+		cache = FALSE,
+		warning = FALSE,
+		error = FALSE,
+		comment = "#",
+	  	tidy = FALSE,
+		collapse = TRUE,
+		results = "asis",
+#		root.dir = outputPath,
+		fig.align = "center")
+	knitr::opts_knit$set(
+		root.dir = getwd())
+	
+	options(warn = 1, width = 200)
+	
+```
+
+```{r extractData, eval = FALSE}
+
+	# project (surveyname) -> surveyid (survey table)
+	surveyId <- subset(dataTables$survey, surveyname %in% params$project)$surveyid
+
+	# gebied (locationname) -> locationid (location table)
+	locationId <- unique(subset(dataTables$location, locationname %in% params$gebied)$locationid)
+
+	# soort (commonname)-> taxonid (taxon table)
+	taxonId <- subset(dataTables$taxon, commonname %in% params$soort)$taxonid
+	
+	# extract corresponding data [surveyId + locationId + taxonId + telseizoen]
+	selectedData <- subset(dataTables$occurrences,
+		surveyid %in% surveyId &
+		locationid %in% locationId &
+		taxonid %in% taxonId &
+		surveyseason %in% params$telseizoen
+	)	
+
+```
+
+```{r outputDirectoriesMaster}
+	
+#	outputPathGraph <- paste0(outputPath, "graphs")
+#	if (!file.exists(outputPathGraph)) dir.create(outputPathGraph, recursive = TRUE)
+#	myGraphPath <- function(pathPlot){paste(outputPathGraph, pathPlot, sep = "/")}
+#	
+#	outputPathObjects <- paste0(outputPath, "objects")
+#	if (!file.exists(outputPathObjects)) dir.create(outputPathObjects, recursive = TRUE)
+#	myObjectPath <- function(pathObject){paste(outputPathObjects, pathObject, sep = "/")}
+
+```
+
+```{r saveInputParameters}
+
+	# for reproducibility, save parameters from the Shiny app
+#	save(params, file = myObjectPath("paramsShiny.RData"))
+
+```
+
+```{r inputResultsGeneration}
+		
+	## all these options are optional
+	
+	# set to TRUE if all results have already been created
+	# only need to load results/graphs created from previous execution
+#	rerunReport <- FALSE
+#	
+#	# when rerunning a report, the graphs and objects don't have to be recreated
+#	if(rerunReport)	createGraphs <- createObjects <- FALSE
+	
+#	createGraphs <- TRUE
+	
+```
+
+```{r loadPackage}
+
+	## Loading the package with the child templates and functions for the creation of this report.
+
+#	library(watervogelsAnalysis)
+
+```
+
+```{r includePlot}
+	
+	params$countDistributionPlot		
+	
+```
+
+```{r includeData}
+	
+	library(DT)
+	
+	datatable(params$selectedData)
+
+```
