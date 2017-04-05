@@ -2,7 +2,11 @@
 
 export(getPathStartTemplate)
 export(plotCountsDistribution)
+export(printSessionInfoMarkdown)
 export(readData)
 import(ggplot2)
 importFrom(plotly,ggplotly)
+importFrom(utils,capture.output)
+importFrom(utils,packageDescription)
+importFrom(utils,packageVersion)
 importFrom(utils,read.csv)

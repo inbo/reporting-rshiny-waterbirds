@@ -34,12 +34,15 @@ shinyUI(
 			downloadButton(
 				outputId = "exportResults", 
 				label = "Export results", 
-			)
+			),
+			
+			width = 2
 
 		),
 
 		mainPanel(
 			plotlyOutput("countDistributionPlot"),
+			br(), br(),
 			dataTableOutput('countData')
 		)
 

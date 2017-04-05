@@ -63,6 +63,26 @@ output:
 	
 ```
 
+```{r formatTextParam}
+
+	formatParamText <- function(x, type, plural, lidwoord = NULL)
+		paste0(
+			if(!is.null(lidwoord))
+				paste0(ifelse(length(x) > 1, "de", lidwoord), " "),
+			type, ifelse(length(x) > 1, plural, ""), ": ",
+		toString(paste0("**", x, "**")))
+	
+```
+
+Het rapport bevat de data van:
+
+* `r formatParamText(params$project, 'project', 's', 'het')`
+* `r formatParamText(params$gebied, 'gebied', 'en', 'het')`
+(`r formatParamText(params$regio, 'regio', 's')`)
+* `r formatParamText(params$soort, 'soort', 'en', 'de')` 
+(`r formatParamText(params$soortgroep, 'groep', 'en')`)
+* `r formatParamText(params$telseizoen, 'telseizoen', 'en', 'het')`
+
 ```{r extractData, eval = FALSE}
 
 	# project (surveyname) -> surveyid (survey table)
@@ -84,58 +104,30 @@ output:
 
 ```
 
-```{r outputDirectoriesMaster}
-	
-#	outputPathGraph <- paste0(outputPath, "graphs")
-#	if (!file.exists(outputPathGraph)) dir.create(outputPathGraph, recursive = TRUE)
-#	myGraphPath <- function(pathPlot){paste(outputPathGraph, pathPlot, sep = "/")}
-#	
-#	outputPathObjects <- paste0(outputPath, "objects")
-#	if (!file.exists(outputPathObjects)) dir.create(outputPathObjects, recursive = TRUE)
-#	myObjectPath <- function(pathObject){paste(outputPathObjects, pathObject, sep = "/")}
+# Aantalsverlopen distributie per soort
 
-```
-
-```{r saveInputParameters}
-
-	# for reproducibility, save parameters from the Shiny app
-#	save(params, file = myObjectPath("paramsShiny.RData"))
-
-```
-
-```{r inputResultsGeneration}
-		
-	## all these options are optional
-	
-	# set to TRUE if all results have already been created
-	# only need to load results/graphs created from previous execution
-#	rerunReport <- FALSE
-#	
-#	# when rerunning a report, the graphs and objects don't have to be recreated
-#	if(rerunReport)	createGraphs <- createObjects <- FALSE
-	
-#	createGraphs <- TRUE
-	
-```
-
-```{r loadPackage}
-
-	## Loading the package with the child templates and functions for the creation of this report.
-
-#	library(watervogelsAnalysis)
-
-```
-
-```{r includePlot}
+```{r includePlot, fig.width = 10}
 	
 	params$countDistributionPlot		
 	
 ```
 
+# Data
+
 ```{r includeData}
 	
 	library(DT)
 	
-	datatable(params$selectedData)
+	datatable(params$selectedData, rownames = FALSE)
 
+```
+
+# Appendix
+
+## Used software
+
+```{r usedSoftware}
+		
+	printSessionInfoMarkdown()
+	
 ```
