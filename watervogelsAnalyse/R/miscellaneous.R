@@ -8,7 +8,7 @@
 #' @importFrom utils capture.output packageDescription packageVersion
 #' @author Laure Cougnaud
 #' @export
-printSessionInfoMarkdown <- function(order = c("alphabetically", "original"), addVersionBioconductor = TRUE){
+printSessionInfoMarkdown <- function(order = c("alphabetically", "original")){
 	
 	order <- match.arg(order)
 	
@@ -54,9 +54,5 @@ printSessionInfoMarkdown <- function(order = c("alphabetically", "original"), ad
 	
 	# print the result into the console
 	cat(resFinal)
-	
-	if(addVersionBioconductor)
-		cat("* Bioconductor (BiocInstaller) version:", 
-				as.character(packageVersion("BiocInstaller")))
 	
 }

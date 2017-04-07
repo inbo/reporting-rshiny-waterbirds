@@ -17,19 +17,19 @@ shinyUI(
 				multiple = TRUE, choices = projects),
 			
 			selectInput("regio", label = "Regio", 
-				multiple = TRUE, choices = ''),
+				multiple = TRUE, choices = ""),
 			
 			selectInput("gebied", label = "Gebied", 
-				multiple = TRUE, choices = ''),
+				multiple = TRUE, choices = ""),
 		
 			selectInput("soortgroep", label = "Soortgroep", 
-				multiple = TRUE, choices = ''),
+				multiple = TRUE, choices = ""),
 			
 			selectInput("soort", label = "Soort", 
-				multiple = TRUE, choices = ''),
+				multiple = TRUE, choices = ""),
 			
 			selectInput("telseizoen", label = "Telseizoen", 
-				multiple = TRUE, choices = ''),
+				multiple = TRUE, choices = ""),
 	
 			downloadButton(
 				outputId = "exportResults", 

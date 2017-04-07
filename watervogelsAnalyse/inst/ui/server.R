@@ -1,8 +1,16 @@
-
-library(watervogelsAnalyse)
-
 shinyServer(function(input, output, session) {
 			
+	# reactiveValues to store parameters
+	# (to avoid redundant calls)
+	selectedParams <- reactiveValues(
+		surveyId = NULL,
+		locationId = NULL,
+		taxonId = NULL
+	)		
+		
+	# reactiveValues to store
+	# data and visualization
+	# (to be used within the report)
 	results <- reactiveValues(
 		selectedData = 	NULL,
 		countDistributionPlot = NULL
@@ -18,11 +26,11 @@ shinyServer(function(input, output, session) {
 				
 				# project (surveyname) -> surveyId (survey table)
 				surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
+				selectedParams$surveyId <- surveyId
+				
 				# surveyId -> regio (region table)
 				regio <- unique(subset(dataTables$region, surveyid %in% surveyId)$region)
-				
-				message('Update regio to:', toString(regio))
-	
+					
 				updateSelectInput(session, 
 					inputId = 'regio',
 					choices = regio)	
@@ -44,13 +52,11 @@ shinyServer(function(input, output, session) {
 				# regio -> regioid (region table)
 				regioId <- unique(subset(dataTables$region, region %in% input$regio)$regionid)
 				
-				# surveyname -> surveyid (survey table)
-				surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
-				
 				# surveyid + regionid -> locationname (location table)
 				locationname <- sort(unique(
 					subset(dataTables$location, 
-						regionid %in% regioId & surveyid %in% surveyId
+						regionid %in% regioId & 
+						surveyid %in% selectedParams$surveyId
 					)$locationname))
 		
 				updateSelectInput(session, 
@@ -73,14 +79,13 @@ shinyServer(function(input, output, session) {
 			
 				# gebied (locationname) -> locationid (region table)
 				locationId <- unique(subset(dataTables$location, locationname %in% input$gebied)$locationid)
-				
-				# surveyname -> surveyid (survey table)
-				surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
+				selectedParams$locationId <- locationId
 				
 				# locationid + surveyid -> taxonid (occurrences table)
 				taxonId <- unique(
 					subset(dataTables$occurrences, 
-						locationid %in% locationId & surveyid %in% surveyId
+						locationid %in% locationId & 
+						surveyid %in% selectedParams$surveyId
 					)$taxonid)
 			
 				# taxonid -> taxongroupid (taxon table)
@@ -113,23 +118,14 @@ shinyServer(function(input, output, session) {
 			# taxongroup -> taxongroupid (taxongroup table)
 			taxonGroupId <- subset(dataTables$taxongroup, taxongroup %in% input$soortgroep)$taxongroupid
 				
-			# taxongroupid -> commonname (taxon table)
-#			commonname <- sort(subset(dataTables$taxon, taxongroupid %in% taxonGroupId)$commonname)
-				
 			# taxongroupid -> taxonid (taxon table)
 			taxonId <- subset(dataTables$taxon, taxongroupid %in% taxonGroupId)$taxonid
-				
-			# surveyname -> surveyid (survey table)
-			surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
-			
-			# gebied -> locationid (location table)
-			locationId <- unique(subset(dataTables$location, locationname %in% input$gebied)$locationid)
-			
+							
 			# only keep taxon counted in survey and gebied (occurrences table)
 			taxonIdCounted <- unique(
 				subset(dataTables$occurrences, 
-					locationid %in% locationId &
-					surveyid %in% surveyId &
+					locationid %in% selectedParams$locationId &
+					surveyid %in% selectedParams$surveyId &
 					taxonid %in% taxonId
 				)$taxonid
 			)
@@ -152,20 +148,15 @@ shinyServer(function(input, output, session) {
 			
 			isolate({
 					
-				# surveyname -> surveyid (survey table)
-				surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
-					
-				# gebied -> locationid (location table)
-				locationId <- unique(subset(dataTables$location, locationname %in% input$gebied)$locationid)
-				
 				# soort (commonname) -> taxonid (taxon table)
 				taxonId <- subset(dataTables$taxon, commonname %in% input$soort)$taxonid
+				selectedParams$taxonId <- taxonId
 				
 				# soort + gebied + project -> telseizoen (occurrences table)
 				telseizoen <- sort(unique(
 					subset(dataTables$occurrences, 
-						locationid %in% locationId &
-						surveyid %in% surveyId &
+						locationid %in% selectedParams$locationId &
+						surveyid %in% selectedParams$surveyId &
 						taxonid %in% taxonId
 					)$surveyseason
 				))
@@ -186,25 +177,15 @@ shinyServer(function(input, output, session) {
 		if(isTruthy(input$telseizoen)){
 			
 			isolate({
-											
-				# project (surveyname) -> surveyid (survey table)
-				surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
-						
-				# gebied (locationname) -> locationid (location table)
-				locationId <- unique(subset(dataTables$location, locationname %in% input$gebied)$locationid)
-						
-				# soort (commonname)-> taxonid (taxon table)
-				taxonId <- subset(dataTables$taxon, commonname %in% input$soort)$taxonid
 						
 				# extract corresponding data [surveyId + locationId + taxonId + telseizoen] (occurrences table)
 				selectedData <- subset(dataTables$occurrences,
-					surveyid %in% surveyId &
-					locationid %in% locationId &
-					taxonid %in% taxonId &
+					surveyid %in% selectedParams$surveyId &
+					locationid %in% selectedParams$locationId &
+					taxonid %in% selectedParams$taxonId &
 					surveyseason %in% input$telseizoen
 				)	
 				
-#				message("Update results$selectedData to", str(selectedData))		
 				colsOfInterest <- c('project', 'regio', 'gebied', 'surveyseason',
 					'telling', 'teldatum', 'tellingstatus', 'euringcode', 'soort', 
 					'aantal')
@@ -220,28 +201,29 @@ shinyServer(function(input, output, session) {
 	output$countDistributionPlot <- renderPlotly({
 		validate(
 			need(results$selectedData,
-				message = "" #"Please select the parameters."
+				message = "" 
 			)
 		)
 		plot <- plotCountsDistribution(
 			inputDataPlot = results$selectedData, 
+			teldatumSeasonDf = teldatumSeasonDf,
 			typePlot = 'plotly')
 		results$countDistributionPlot <<- plot
 		plot
 	})
 
 	# print data.table
-	output$countData <- renderDataTable({
+	output$countData <- shiny:::renderDataTable({
 		validate(
 			need(results$selectedData,
-				message = ""#"Please select the parameters."
+				message = ""
 			)
 		)
 		results$selectedData
 	})
 		
 	output$exportResults <- downloadHandler(
-		filename = "waterbirds.html",
+		filename = 'results.zip',
 		content = function(file) {
 			
 			# check if selected data and plot not NULL
@@ -263,29 +245,41 @@ shinyServer(function(input, output, session) {
 			)
 			
 			# get path template report
-			pathReport <- watervogelsAnalyse::getPathStartTemplate()
+			pathReport <- watervogelsAnalyse::getPathReport()
 			
 			# get report name
 			reportName <- basename(pathReport)
 			
+			# create temporary files in temp
+			tmpDir <- tempdir()
+			dir.create(tmpDir, recursive = TRUE)
+			
 			# copy start template in working directory
-			file.copy(
-				from = pathReport, 
-				to = ".", 
-				overwrite = TRUE
-			)
+			file.copy(from = pathReport, to = tmpDir, overwrite = TRUE)
 			
 			# run report
-			res <- rmarkdown::render(
-				reportName, 
-				params = params
-			)
+			library(rmarkdown)
+			res <- rmarkdown::render(file.path(tmpDir, reportName), params = params)
 			
-			file.copy("waterbirds.html", file)
+			# export the data
+			write.csv(results$selectedData, 
+				file = file.path(tmpDir, "data.csv"), row.names = FALSE)
+			
+			# zip results
+			zipPath <- file.path(tmpDir, 'results.zip')
+			zip(zipPath, 
+				files = file.path(tmpDir, c('data.csv', 'watervogels.html')),
+				flag = '-j')
+			
+			# return the zip file
+			file.copy(zipPath, file)
+			
+			# clean directory
+			unlink(tmpDir)
 			
 		}, 
 		
-		contentType = "text/html"
+		contentType = "application/zip"
 
 	)
 

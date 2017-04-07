@@ -1,9 +1,4 @@
 *.Rcheck
 *.tar.gz
 data/
-watervogelsShinyApp/waterbirds.Rmd
-watervogelsShinyApp/waterbirds.html
-
-
-
 /.project

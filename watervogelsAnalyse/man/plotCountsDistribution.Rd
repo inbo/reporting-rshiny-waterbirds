@@ -4,10 +4,13 @@
 \alias{plotCountsDistribution}
 \title{generate a plot with counts distribution}
 \usage{
-plotCountsDistribution(inputDataPlot, typePlot = c("ggplot", "plotly"))
+plotCountsDistribution(inputDataPlot, teldatumSeasonDf, typePlot = c("ggplot",
+  "plotly"))
 }
 \arguments{
 \item{inputDataPlot}{data.frame with input data}
+
+\item{teldatumSeasonDf}{data.frame with available teldatum per surveyseason}
 
 \item{typePlot}{string, 'ggplot' for static plot of 'plotly' for interactive plot}
 }

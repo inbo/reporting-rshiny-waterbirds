@@ -2,11 +2,11 @@
 #' @return string with path of start template
 #' @author Laure Cougnaud and Kirsten Van Hoorde
 #' @export
-getPathStartTemplate <- function(){
+getPathReport <- function(){
 	
-	basePathStartTemplate <- grep("watervogelsAnalyse", searchpaths(), value = TRUE)
-	pathStartTemplate <- dir(basePathStartTemplate , pattern = ".Rmd", full.names = TRUE)
+	basePathReport <- system.file("report", package = "watervogelsAnalyse")
+	pathReport <- dir(basePathReport , pattern = "watervogels.Rmd", full.names = TRUE)
 	
-	return(pathStartTemplate)
+	return(pathReport)
 	
 }

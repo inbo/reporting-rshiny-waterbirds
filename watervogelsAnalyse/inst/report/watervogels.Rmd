@@ -117,7 +117,6 @@ Het rapport bevat de data van:
 ```{r includeData}
 	
 	library(DT)
-	
 	datatable(params$selectedData, rownames = FALSE)
 
 ```

@@ -4,10 +4,7 @@
 \alias{readData}
 \title{simple wrapper to extract all data tables from set of files}
 \usage{
-readData(basePath)
-}
-\arguments{
-\item{basePath}{base path where all the tables are present in csv format}
+readData()
 }
 \value{
 list of data.frame (each one is a different table)

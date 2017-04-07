@@ -1,14 +1,18 @@
 # load library with report/functions
 library(watervogelsAnalyse)
-#tmp <- sapply(list.files("../watervogelsAnalyse/R", full.names = TRUE), source)
 
-# path with the tables
-pathData <- "../data/Testdata waterbirds OpenAnalytics"
 # load the data
-dataTables <- readData(pathData)
+dataTables <- readData()
 
 # projects (surveyname)
 projects <- sort(unique(dataTables$survey$surveyname))
+
+# extract unique teldatum per season
+library(plyr)
+teldatumSeasonDf <- ddply(dataTables$occurrences, "surveyseason", 
+	function(x) 
+	matrix(unique(x$teldatum), dimnames = list(NULL, 'teldatum')))
+
 
 # parameters used for testing
 #input <- list(

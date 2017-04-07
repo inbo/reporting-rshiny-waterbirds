@@ -5,8 +5,7 @@
 \title{format the sessionInfo output for markdown
 (sort packages for each slot)}
 \usage{
-printSessionInfoMarkdown(order = c("alphabetically", "original"),
-  addVersionBioconductor = TRUE)
+printSessionInfoMarkdown(order = c("alphabetically", "original"))
 }
 \arguments{
 \item{order, }{string, either 'alphabetically' or 'original', 

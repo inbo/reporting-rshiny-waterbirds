@@ -1,14 +1,23 @@
 #' simple wrapper to extract all data tables from set of files
-#' @param basePath base path where all the tables are present in csv format
 #' @return list of data.frame (each one is a different table)
 #' @author Laure Cougnaud
-#' @importFrom utils read.csv
+#' @importFrom utils read.csv unzip
 #' @export
-readData <- function(basePath){
+readData <- function(){
 	
-	dataFiles <- list.files(basePath, full.names = TRUE, pattern = ".csv$")
-	dataAll <- sapply(dataFiles, read.csv, stringsAsFactors = FALSE, simplify = FALSE)
-	names(dataAll) <- sub("WB_report_(.+).csv", "\\1", basename(dataFiles))
+	pathData <- system.file("extdata", package = "watervogelsAnalyse")
+
+	pathArchive <- list.files(pathData, full.names = TRUE, pattern = "data.bz2")
+	
+	dataFilesName <- unzip(pathArchive, list = TRUE)$Name
+	
+	dataAll <- sapply(dataFilesName, function(file)
+		read.csv(
+			unz(pathArchive, filename = file), 
+			stringsAsFactors = FALSE
+		), simplify = FALSE
+	)
+	names(dataAll) <- sub("WB_report_(.+).csv", "\\1", basename(dataFilesName))
 	
 	return(dataAll)
 	
