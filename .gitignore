@@ -1,4 +1,5 @@
 *.Rcheck
 *.tar.gz
 data/
+database/
 /.project
