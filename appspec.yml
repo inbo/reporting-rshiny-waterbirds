@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/reporting-rshiny-waterbirds
+hooks:
+  AfterInstall:
+    - location: scripts/reporting-rshiny-waterbirds.sh
+      timeout: 1000
+permissions:
+  - object: /home/ubuntu/reporting-rshiny-waterbirds
+    owner: ubuntu
+    group: ubuntu
+    mode: 764

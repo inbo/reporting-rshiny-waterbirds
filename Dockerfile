@@ -37,6 +37,6 @@ RUN rm /root/watervogelsAnalyse_0.0-1.tar.gz
 
 COPY Rprofile.site /usr/lib/R/etc/
 
-EXPOSE 3838
+EXPOSE 3839
 
 CMD ["R", "-e library(watervogelsAnalyse);runWatervogels()]
