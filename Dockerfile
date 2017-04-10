@@ -30,10 +30,9 @@ RUN R -e "install.packages(c('plyr', 'rmarkdown'), repos = 'https://cloud.r-proj
 RUN R -e "install.packages('DT', repos = 'https://cloud.r-project.org')"
 
 # package
-RUN echo 'watervogelsAnalyse package v0.0-1'
-COPY ./watervogelsAnalyse_0.0-1.tar.gz /root/
-RUN R CMD INSTALL /root/watervogelsAnalyse_0.0-1.tar.gz
-RUN rm /root/watervogelsAnalyse_0.0-1.tar.gz
+COPY ./reporting-rshiny-waterbirds.tar.gz /root/
+RUN R CMD INSTALL /root/reporting-rshiny-waterbirds.tar.gz
+RUN rm /root/reporting-rshiny-waterbirds.tar.gz
 
 COPY Rprofile.site /usr/lib/R/etc/
 
