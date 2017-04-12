@@ -36,6 +36,6 @@ RUN rm /root/reporting-rshiny-waterbirds.tar.gz
 
 COPY Rprofile.site /usr/lib/R/etc/
 
-EXPOSE 3839
+EXPOSE 3838
 
 CMD ["R", "-e library(watervogelsAnalyse);runWatervogels()]
