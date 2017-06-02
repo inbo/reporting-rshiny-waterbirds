@@ -1,7 +1,14 @@
 shinyServer(function(input, output, session) {
+		
+	# reactiveValue to store possible values
+	# (to avoid redundant calls to the db)
+	possibleValues <- reactiveValues(
+		locationId = NULL,
+		taxonId = NULL
+	)		
 			
-	# reactiveValues to store parameters
-	# (to avoid redundant calls)
+	# reactiveValues to store selected parameters
+	# (to avoid redundant calls to the db)
 	selectedParams <- reactiveValues(
 		surveyId = NULL,
 		locationId = NULL,
@@ -25,15 +32,18 @@ shinyServer(function(input, output, session) {
 			isolate({
 				
 				# project (surveyname) -> surveyId (survey table)
-				surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
-				selectedParams$surveyId <- surveyId
-				
-				# surveyId -> regio (region table)
-				regio <- unique(subset(dataTables$region, surveyid %in% surveyId)$region)
+#				surveyId <- subset(dataTables$survey, surveyname %in% input$project)$surveyid
+#				selectedParams$surveyId <- surveyId
+#				
+#				# surveyId -> regio (region table)
+#				regio <- unique(subset(dataTables$region, surveyid %in% surveyId)$region)
 					
-				updateSelectInput(session, 
-					inputId = 'regio',
-					choices = regio)	
+				resInfoProject <- getRegioFromSurvey(surveyName = input$project, ch = ch)
+				selectedParams$surveyId <- resInfoProject$surveyId
+				possibleValues$locationId <- resInfoProject$locationId
+				regions <- resInfoProject$regioName
+				
+				updateSelectInput(session, inputId = 'regio', choices = regions)	
 		
 			})
 		
@@ -45,23 +55,28 @@ shinyServer(function(input, output, session) {
 	observe({
 				
 		# check if regio non empty
-		if(isTruthy(input$regio)){
+		if(isTruthy(input$regio) & isTruthy(possibleValues$locationId)){
 			
 			isolate({
 					
 				# regio -> regioid (region table)
-				regioId <- unique(subset(dataTables$region, region %in% input$regio)$regionid)
-				
-				# surveyid + regionid -> locationname (location table)
-				locationname <- sort(unique(
-					subset(dataTables$location, 
-						regionid %in% regioId & 
-						surveyid %in% selectedParams$surveyId
-					)$locationname))
-		
+#				regioId <- unique(subset(dataTables$region, region %in% input$regio)$regionid)
+#				
+#				# surveyid + regionid -> locationname (location table)
+#				locationname <- sort(unique(
+#					subset(dataTables$location, 
+#						regionid %in% regioId & 
+#						surveyid %in% selectedParams$surveyId
+#					)$locationname))
+	
+				locations <- getLocationFromRegionLocationId(
+					regionName = input$regio, 
+					locationId = possibleValues$locationId, 
+					ch = ch)
+
 				updateSelectInput(session, 
 					inputId = 'gebied',
-					choices = locationname)	
+					choices = locations)	
 		
 			})
 					
@@ -73,31 +88,42 @@ shinyServer(function(input, output, session) {
 	observe({
 				
 		# check if gebied non empty
-		if(isTruthy(input$gebied)){
+		if(isTruthy(input$gebied) && isTruthy(selectedParams$surveyId)){
 			
 			isolate({
 			
 				# gebied (locationname) -> locationid (region table)
-				locationId <- unique(subset(dataTables$location, locationname %in% input$gebied)$locationid)
-				selectedParams$locationId <- locationId
-				
-				# locationid + surveyid -> taxonid (occurrences table)
-				taxonId <- unique(
-					subset(dataTables$occurrences, 
-						locationid %in% locationId & 
-						surveyid %in% selectedParams$surveyId
-					)$taxonid)
-			
-				# taxonid -> taxongroupid (taxon table)
-				taxonGroupId <- unique(subset(dataTables$taxon, 
-					taxonid %in% taxonId
-				)$taxongroupid)
+#				locationId <- unique(subset(dataTables$location, locationname %in% input$gebied)$locationid)
+#				selectedParams$locationId <- locationId
+#				
+#				# locationid + surveyid -> taxonid (occurrences table)
+#				taxonId <- unique(
+#					subset(dataTables$occurrences, 
+#						locationid %in% locationId & 
+#						surveyid %in% selectedParams$surveyId
+#					)$taxonid)
+#			
+#				# taxonid -> taxongroupid (taxon table)
+#				taxonGroupId <- unique(subset(dataTables$taxon, 
+#					taxonid %in% taxonId
+#				)$taxongroupid)
+#		
+#				# taxongroupid -> taxongroup (taxongroup table)
+#				taxonGroups <- sort(subset(dataTables$taxongroup, 
+#					taxongroupid %in% taxonGroupId
+#				)$taxongroup)
 		
-				# taxongroupid -> taxongroup (taxongroup table)
-				taxonGroups <- sort(subset(dataTables$taxongroup, 
-					taxongroupid %in% taxonGroupId
-				)$taxongroup)
-								
+				resInfoTaxonGroup <- getTaxonGroupFromLocationSurvey(
+					locationName = input$gebied, 
+					surveyId = selectedParams$surveyId,
+					ch = ch
+				)
+			
+				selectedParams$locationId <- resInfoTaxonGroup$locationId
+				possibleValues$taxonId <- resInfoTaxonGroup$taxonId
+				
+				taxonGroups <- resInfoTaxonGroup$taxonGroup
+				
 				updateSelectInput(session, 
 					inputId = 'soortgroep',
 					choices = taxonGroups)	
@@ -113,28 +139,35 @@ shinyServer(function(input, output, session) {
 	observe({
 			
 		# check if soortgroep non empty
-		if(isTruthy(input$soortgroep)){
+		if(isTruthy(input$soortgroep) && isTruthy(possibleValues$taxonId)){
 				
-			# taxongroup -> taxongroupid (taxongroup table)
-			taxonGroupId <- subset(dataTables$taxongroup, taxongroup %in% input$soortgroep)$taxongroupid
+#			# taxongroup -> taxongroupid (taxongroup table)
+#			taxonGroupId <- subset(dataTables$taxongroup, taxongroup %in% input$soortgroep)$taxongroupid
+#				
+#			# taxongroupid -> taxonid (taxon table)
+#			taxonId <- subset(dataTables$taxon, taxongroupid %in% taxonGroupId)$taxonid
+#							
+#			# only keep taxon counted in survey and gebied (occurrences table)
+#			taxonIdCounted <- unique(
+#				subset(dataTables$occurrences, 
+#					locationid %in% selectedParams$locationId &
+#					surveyid %in% selectedParams$surveyId &
+#					taxonid %in% taxonId
+#				)$taxonid
+#			)
+#			# extract their common name
+#			commonname <- sort(subset(dataTables$taxon, taxonid %in% taxonIdCounted)$commonname)
+
+			# assume that taxon group description is unique identifier for taxon
+			taxons <- getTaxonFromTaxonGroupTaxonId(
+				taxonId = possibleValues$taxonId,
+				taxonGroup = input$soortgroep,
+				ch = ch)
 				
-			# taxongroupid -> taxonid (taxon table)
-			taxonId <- subset(dataTables$taxon, taxongroupid %in% taxonGroupId)$taxonid
-							
-			# only keep taxon counted in survey and gebied (occurrences table)
-			taxonIdCounted <- unique(
-				subset(dataTables$occurrences, 
-					locationid %in% selectedParams$locationId &
-					surveyid %in% selectedParams$surveyId &
-					taxonid %in% taxonId
-				)$taxonid
-			)
-			# extract their common name
-			commonname <- sort(subset(dataTables$taxon, taxonid %in% taxonIdCounted)$commonname)
-			
 			updateSelectInput(session, 
 				inputId = 'soort',
-				choices = commonname)	
+				choices = taxons
+			)
 				
 		}
 			
@@ -144,26 +177,33 @@ shinyServer(function(input, output, session) {
 	observe({
 				
 		# check if soort non empty
-		if(isTruthy(input$soort)){
+		if(isTruthy(input$soort) && isTruthy(selectedParams$surveyId) && isTruthy(selectedParams$locationId)){
 			
 			isolate({
 					
-				# soort (commonname) -> taxonid (taxon table)
-				taxonId <- subset(dataTables$taxon, commonname %in% input$soort)$taxonid
-				selectedParams$taxonId <- taxonId
-				
-				# soort + gebied + project -> telseizoen (occurrences table)
-				telseizoen <- sort(unique(
-					subset(dataTables$occurrences, 
-						locationid %in% selectedParams$locationId &
-						surveyid %in% selectedParams$surveyId &
-						taxonid %in% taxonId
-					)$surveyseason
-				))
+#				# soort (commonname) -> taxonid (taxon table)
+#				taxonId <- subset(dataTables$taxon, commonname %in% input$soort)$taxonid
+#				selectedParams$taxonId <- taxonId
+#				
+#				# soort + gebied + project -> telseizoen (occurrences table)
+#				telseizoen <- sort(unique(
+#					subset(dataTables$occurrences, 
+#						locationid %in% selectedParams$locationId &
+#						surveyid %in% selectedParams$surveyId &
+#						taxonid %in% taxonId
+#					)$surveyseason
+#				))
+		
+				seasons <- getSeasonFromSurveyLocationTaxon(
+					surveyId = selectedParams$surveyId,
+					locationId = selectedParams$locationId,
+					taxon = input$soort,
+					ch = ch
+				)
 				
 				updateSelectInput(session, 
 					inputId = 'telseizoen',
-					choices = telseizoen)
+					choices = seasons)
 		
 			})
 					
@@ -174,22 +214,38 @@ shinyServer(function(input, output, session) {
 	# extract selected data (used for plot and data.table)
 	observe({
 				
-		if(isTruthy(input$telseizoen)){
+		if(isTruthy(input$telseizoen) &&
+			isTruthy(selectedParams$surveyId) &&
+			isTruthy(selectedParams$locationId) &&
+			isTruthy(selectedParams$taxonId)
+		){
 			
 			isolate({
 						
-				# extract corresponding data [surveyId + locationId + taxonId + telseizoen] (occurrences table)
-				selectedData <- subset(dataTables$occurrences,
-					surveyid %in% selectedParams$surveyId &
-					locationid %in% selectedParams$locationId &
-					taxonid %in% selectedParams$taxonId &
-					surveyseason %in% input$telseizoen
-				)	
-				
-				colsOfInterest <- c('project', 'regio', 'gebied', 'surveyseason',
-					'telling', 'teldatum', 'tellingstatus', 'euringcode', 'soort', 
-					'aantal')
-				results$selectedData <- selectedData[, colsOfInterest]
+#				# extract corresponding data [surveyId + locationId + taxonId + telseizoen] (occurrences table)
+#				selectedData <- subset(dataTables$occurrences,
+#					surveyid %in% selectedParams$surveyId &
+#					locationid %in% selectedParams$locationId &
+#					taxonid %in% selectedParams$taxonId &
+#					surveyseason %in% input$telseizoen
+#				)	
+#				
+#				colsOfInterest <- c('project', 'regio', 'gebied', 'surveyseason',
+#					'telling', 'teldatum', 'tellingstatus', 'euringcode', 'soort', 
+#					'aantal')
+#							
+#				results$selectedData <- selectedData[, colsOfInterest]
+						
+				# TODO: finish implementation in progress!
+				selectedData <- getData(
+					surveyId = selectedParams$surveyId, 
+					locationId = selectedParams$locationId,
+					taxonId = selectedParams$taxonId,
+					surveyseason = input$telseizoen,
+					ch = ch
+				)			
+							
+				results$selectedData <- selectedData
 
 			})
 			

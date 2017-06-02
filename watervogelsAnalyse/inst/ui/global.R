@@ -2,17 +2,22 @@
 library(watervogelsAnalyse)
 
 # load the data
-dataTables <- readData()
+#dataTables <- readData()
+#
+## projects (surveyname)
+#projects <- sort(unique(dataTables$survey$surveyname))
+#
+## extract unique teldatum per season
+#library(plyr)
+#teldatumSeasonDf <- ddply(dataTables$occurrences, "surveyseason", 
+#	function(x) 
+#	matrix(unique(x$teldatum), dimnames = list(NULL, 'teldatum')))
 
-# projects (surveyname)
-projects <- sort(unique(dataTables$survey$surveyname))
+# connect to the database
+library(RODBC)
 
-# extract unique teldatum per season
-library(plyr)
-teldatumSeasonDf <- ddply(dataTables$occurrences, "surveyseason", 
-	function(x) 
-	matrix(unique(x$teldatum), dimnames = list(NULL, 'teldatum')))
-
+# currently placeholder for the connection
+ch <- odbcConnect(dsn = "[mySqlServerIP]", uid = "[userID]", pwd = "[pwd]")
 
 # parameters used for testing
 #input <- list(

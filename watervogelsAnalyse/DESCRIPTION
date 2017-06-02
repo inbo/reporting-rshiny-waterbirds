@@ -1,15 +1,16 @@
 Package: watervogelsAnalyse
 Type: Package
 Title: analyse of watervogels telling data
-Version: 0.0-1
-Date: 2017-04-07
+Version: 0.0-2
+Date: 2017-06-02
 Author: Laure Cougnaud
 Maintainer: Laure Cougnaud <laure.cougnaud@openanalytics.eu>
 Description: Functies en rapport voor analyse of telling data van watervogels.
 Imports:
   ggplot2, 
   plotly,
-  shiny
+  shiny,
+  RODBC
 Suggests:
   plyr,
   rmarkdown,

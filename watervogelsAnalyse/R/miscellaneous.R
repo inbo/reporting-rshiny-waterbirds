@@ -3,7 +3,6 @@
 #' @param order, string, either 'alphabetically' or 'original', 
 #' depending if the strings in each slot (e.g. the packages in 'attached base packages') should be
 #' sorted alphabetically or if no sorting should be done
-#' @param addVersionBioconductor logical, if TRUE (FALSE by default) print also Bioconductor version (BiocInstaller)
 #' @return no returned value, the reformatted output of sessionInfo is printed in the current console
 #' @importFrom utils capture.output packageDescription packageVersion
 #' @author Laure Cougnaud
