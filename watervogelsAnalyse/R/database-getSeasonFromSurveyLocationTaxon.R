@@ -33,6 +33,8 @@ getSeasonFromSurveyLocationTaxon <- function(surveyId, locationId, taxon, ch){
 		ch = ch
 	)
 	
-	return(seasonNames)
+	res <- list(seasonNames = seasonNames, taxonId = taxonId)
+	
+	return(res)
 	
 }

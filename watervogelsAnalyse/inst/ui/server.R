@@ -210,12 +210,15 @@ shinyServer(function(input, output, session) {
 		
 				if(server){	
 							
-					seasons <- getSeasonFromSurveyLocationTaxon(
+					resInfoSurveyLocationTaxon <- getSeasonFromSurveyLocationTaxon(
 						surveyId = selectedParams$surveyId,
 						locationId = selectedParams$locationId,
 						taxon = input$soort,
 						ch = ch
 					)
+					
+					seasons <- resInfoSurveyLocationTaxon$seasonNames
+					selectedParams$taxonId <- resInfoSurveyLocationTaxon$taxonId
 					
 				}else{
 					
@@ -257,7 +260,6 @@ shinyServer(function(input, output, session) {
 						
 				if(server){			
 							
-					# TODO: finish implementation in progress!
 					selectedData <- getData(
 						surveyId = selectedParams$surveyId, 
 						locationId = selectedParams$locationId,
