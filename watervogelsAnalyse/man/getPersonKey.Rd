@@ -2,21 +2,21 @@
 % Please edit documentation in R/database-getPersonKey.R
 \name{getPersonKey}
 \alias{getPersonKey}
-\title{get key of person stored in database from username (provided in ShinyProxy)}
+\title{get key of person stored in database from email (provided in ShinyProxy)}
 \usage{
-getPersonKey(ch, username)
+getPersonKey(ch, email)
 }
 \arguments{
 \item{ch}{database connection, created with 
 the \code{odbcConnect} function of the \code{RODBC} package}
 
-\item{username}{string with username}
+\item{email}{string with email}
 }
 \value{
 string with person key
 }
 \description{
-get key of person stored in database from username (provided in ShinyProxy)
+get key of person stored in database from email (provided in ShinyProxy)
 }
 \author{
 Laure Cougnaud

@@ -56,7 +56,10 @@ getQuery <- function(x = NULL, y, table, distinct = FALSE){
 	
 	# list the tables:
 	# listTables <- sqlTables(ch, tableType = "TABLE")
-#	sqlQuery(ch, "select top 10 * from W0004_01_Waterbirds.dbo.[table]")
+	
+	# get documentation:
+#	documentation <- sqlQuery(ch, "SELECT * FROM W0004_01_Waterbirds.dbo.[vwDocumentatie]", stringsAsFactors = FALSE)
+	
 	query <- paste0("SELECT ", 
 		ifelse(distinct, "DISTINCT ", ""), 
 		yRf, " FROM W0004_01_Waterbirds.dbo.", table, 

@@ -11,9 +11,9 @@ if(server){
 	# currently placeholder for the connection
 	ch <- odbcConnect(dsn = "[mySqlServerIP]", uid = "[userID]", pwd = "[pwd]")
 	
-	# get person key from user name
-	username <- Sys.getenv("SHINYPROXY_USERNAME")
-	personKey <- getPersonKey(ch = ch, username = username)
+	# get person key from user login (email adress)
+	userEmail <- Sys.getenv("SHINYPROXY_USERNAME")
+	personKey <- getPersonKey(ch = ch, email = userEmail)
 		
 	# extract available projects
 	projects <- getProjects(ch, personKey = personKey)
@@ -49,4 +49,4 @@ if(server){
 #		"2009-10", "2010-11", "2011-12", "2012-13", "2013-14", 
 #		"2014-15", "2015-16")# occurrences$surveyseason, multiple
 #)
-# Sys.setenv(SHINYPROXY_USERNAME = "IN") # example person code for testing
+# Sys.setenv(SHINYPROXY_USERNAME = "[email address]") # example person code for testing

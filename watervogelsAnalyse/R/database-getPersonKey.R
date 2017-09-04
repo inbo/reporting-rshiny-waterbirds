@@ -1,14 +1,14 @@
-#' get key of person stored in database from username (provided in ShinyProxy)
+#' get key of person stored in database from email (provided in ShinyProxy)
 #' @param ch database connection, created with 
 #' the \code{odbcConnect} function of the \code{RODBC} package
-#' @param username string with username
+#' @param email string with email
 #' @return string with person key
 #' @author Laure Cougnaud
 #' @export
-getPersonKey <- function(ch, username){
+getPersonKey <- function(ch, email){
 	
 	personKey <- extractYFromXTable(
-		x = list(PersonCode = username), y = "PersonKey",
+		x = list(email = email), y = "PersonKey",
 		table = "DimPerson", ch = ch
 	)
 	
