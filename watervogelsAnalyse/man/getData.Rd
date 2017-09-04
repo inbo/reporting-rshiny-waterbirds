@@ -4,7 +4,7 @@
 \alias{getData}
 \title{extract data of interest from a certain survey, location, taxon and survey season}
 \usage{
-getData(surveyId, locationId, taxonId, surveyseason, ch)
+getData(surveyId, locationId, taxonId, surveyseason, personKey, ch)
 }
 \arguments{
 \item{surveyId}{survey identifier(s)}
@@ -14,6 +14,8 @@ getData(surveyId, locationId, taxonId, surveyseason, ch)
 \item{taxonId}{taxon identifier(s)}
 
 \item{surveyseason}{survey season name(s)}
+
+\item{personKey}{integer with person key}
 
 \item{ch}{database connection, created with 
 the \code{odbcConnect} function of the \code{RODBC} package}

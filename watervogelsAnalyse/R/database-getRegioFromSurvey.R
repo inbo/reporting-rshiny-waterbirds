@@ -1,7 +1,8 @@
-#' extract region(s) available for a certain survey
+#' extract region(s) available for a certain survey and person
 #' @param surveyName name of the survey, e.g. 'Slaapplaatstellingen Aalscholvers'
 #' @param ch database connection, created with 
 #' the \code{odbcConnect} function of the \code{RODBC} package
+#' @param personKey integer with person key
 #' @return list with two elements
 #' \itemize{
 #' \item{'surveyId': }{survey identifier}
@@ -10,22 +11,22 @@
 #' }vector of regions available for specified surveys
 #' @author Laure Cougnaud
 #' @export
-getRegioFromSurvey <- function(surveyName, ch){
+getRegioFromSurvey <- function(surveyName, personKey, ch){
 	
 	# surveyName -> surveyId
-	surveyId <- extractYFromYTable(
+	surveyId <- extractYFromXTable(
 		x = list('SurveyNaam' = surveyName), 
 		y = "SurveyKey", table = "DimSurvey",
 		ch = ch)
 
 	# surveyId -> LocationId
-	locationId <- extractYFromYTable(
-		x = list('SurveyKey' = surveyId), 
+	locationId <- extractYFromXTable(
+		x = list('SurveyKey' = surveyId, 'PersonKey' = personKey), 
 		y = "LocationWVKey", table = "FactTaxonOccurrence",
 		ch = ch, distinct = TRUE)
 
 	# LocationId -> RegioName
-	regioName <- extractYFromYTable(
+	regioName <- extractYFromXTable(
 		x = list('LocationWVKey' = locationId), 
 		y = "RegioWVNaam", table = "DimLocationWV", #"RegioWVCode"
 		ch = ch, distinct = TRUE)

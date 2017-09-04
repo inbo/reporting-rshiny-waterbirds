@@ -4,7 +4,7 @@
 \alias{getSeasonFromSurveyLocationTaxon}
 \title{extract season(s) available for a survey, location and taxon}
 \usage{
-getSeasonFromSurveyLocationTaxon(surveyId, locationId, taxon, ch)
+getSeasonFromSurveyLocationTaxon(surveyId, locationId, taxon, personKey, ch)
 }
 \arguments{
 \item{surveyId}{survey identifier}
@@ -12,6 +12,8 @@ getSeasonFromSurveyLocationTaxon(surveyId, locationId, taxon, ch)
 \item{locationId}{location identifier}
 
 \item{taxon}{taxon name}
+
+\item{personKey}{integer with person key}
 
 \item{ch}{ch database connection, created with 
 the \code{odbcConnect} function of the \code{RODBC} package}

@@ -2,19 +2,21 @@
 % Please edit documentation in R/database-getProjects.R
 \name{getProjects}
 \alias{getProjects}
-\title{get available projects}
+\title{get available projects for a certain person}
 \usage{
-getProjects(ch)
+getProjects(ch, personKey)
 }
 \arguments{
 \item{ch}{database connection, created with 
 the \code{odbcConnect} function of the \code{RODBC} package}
+
+\item{personKey}{integer with person key}
 }
 \value{
 vector with available projects
 }
 \description{
-get available projects
+get available projects for a certain person
 }
 \author{
 Laure Cougnaud

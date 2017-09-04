@@ -2,12 +2,14 @@
 % Please edit documentation in R/database-getRegioFromSurvey.R
 \name{getRegioFromSurvey}
 \alias{getRegioFromSurvey}
-\title{extract region(s) available for a certain survey}
+\title{extract region(s) available for a certain survey and person}
 \usage{
-getRegioFromSurvey(surveyName, ch)
+getRegioFromSurvey(surveyName, personKey, ch)
 }
 \arguments{
 \item{surveyName}{name of the survey, e.g. 'Slaapplaatstellingen Aalscholvers'}
+
+\item{personKey}{integer with person key}
 
 \item{ch}{database connection, created with 
 the \code{odbcConnect} function of the \code{RODBC} package}
@@ -21,7 +23,7 @@ list with two elements
 }vector of regions available for specified surveys
 }
 \description{
-extract region(s) available for a certain survey
+extract region(s) available for a certain survey and person
 }
 \author{
 Laure Cougnaud

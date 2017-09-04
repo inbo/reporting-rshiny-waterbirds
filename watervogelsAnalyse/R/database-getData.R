@@ -3,15 +3,16 @@
 #' @param locationId location identifier(s)
 #' @param taxonId taxon identifier(s)
 #' @param surveyseason survey season name(s)
+#' @param personKey integer with person key
 #' @param ch database connection, created with 
 #' the \code{odbcConnect} function of the \code{RODBC} package
 #' @return data.frame with data of interest
 #' @author Laure Cougnaud
 #' @export
-getData <- function(surveyId, locationId, taxonId, surveyseason, ch){
+getData <- function(surveyId, locationId, taxonId, surveyseason, personKey, ch){
 	
 	# surveyseasonName -> surveySeasonId
-	surveySeasonId <- extractYFromYTable(
+	surveySeasonId <- extractYFromXTable(
 		x = list('SeasonName' = surveyseason), 
 		y = "SeasonKey", table = "DimSeason",
 		ch = ch)
@@ -22,7 +23,8 @@ getData <- function(surveyId, locationId, taxonId, surveyseason, ch){
 			'SurveyKey' = surveyId,
 			'LocationWVKey' = locationId,
 			'TaxonWVKey' = taxonId,
-			'SeasonKey' = surveySeasonId
+			'SeasonKey' = surveySeasonId,
+			'PersonKey' = personKey
 		), 
 		y = c('SurveyKey', 'LocationWVKey', 'TaxonWVKey', 'SeasonKey',
 			'SampleKey', 'SampleDate', 'TaxonCount'), 

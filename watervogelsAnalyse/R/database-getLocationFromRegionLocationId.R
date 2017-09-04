@@ -16,7 +16,7 @@
 getLocationFromRegionLocationId <- function(regionName, locationId, ch){
 	
 	# RegioWVNaam -> LocationWVNaam
-	locationName <- extractYFromYTable(
+	locationName <- extractYFromXTable(
 		x = list('RegioWVNaam' = regionName, 'LocationWVKey' = locationId),
 		y = "LocationWVNaam", table = "DimLocationWV",
 		ch = ch)

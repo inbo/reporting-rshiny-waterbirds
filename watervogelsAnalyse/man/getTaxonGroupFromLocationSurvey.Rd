@@ -4,12 +4,14 @@
 \alias{getTaxonGroupFromLocationSurvey}
 \title{extract taxon group(s) available for a certain survey location and survey}
 \usage{
-getTaxonGroupFromLocationSurvey(locationName, surveyId, ch)
+getTaxonGroupFromLocationSurvey(locationName, surveyId, personKey, ch)
 }
 \arguments{
 \item{locationName}{name of the location, e.g. 'Galgenschoor (Schelde Lillo-Fort - Containerkaai) (RO)'}
 
 \item{surveyId}{identifier of the survey, e.g. 6}
+
+\item{personKey}{integer with person key}
 
 \item{ch}{database connection, created with 
 the \code{odbcConnect} function of the \code{RODBC} package}

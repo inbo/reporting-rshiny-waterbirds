@@ -3,6 +3,7 @@
 export(getData)
 export(getLocationFromRegionLocationId)
 export(getPathReport)
+export(getPersonKey)
 export(getProjects)
 export(getQuery)
 export(getQueryJoin)

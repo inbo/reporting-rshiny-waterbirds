@@ -33,7 +33,9 @@ shinyServer(function(input, output, session) {
 					
 				if(server){					
 										
-					resInfoProject <- getRegioFromSurvey(surveyName = input$project, ch = ch)
+					resInfoProject <- getRegioFromSurvey(
+						surveyName = input$project, personKey = personKey, 
+						ch = ch)
 					selectedParams$surveyId <- resInfoProject$surveyId
 					possibleValues$locationId <- resInfoProject$locationId
 					regions <- resInfoProject$regioName
@@ -70,7 +72,7 @@ shinyServer(function(input, output, session) {
 
 					locations <- getLocationFromRegionLocationId(
 						regionName = input$regio, 
-						locationId = possibleValues$locationId, 
+						locationId = possibleValues$locationId, # available for personKey
 						ch = ch)
 			
 				}else{
@@ -110,6 +112,7 @@ shinyServer(function(input, output, session) {
 					resInfoTaxonGroup <- getTaxonGroupFromLocationSurvey(
 						locationName = input$gebied, 
 						surveyId = selectedParams$surveyId,
+						personKey = personKey,
 						ch = ch
 					)
 				
@@ -165,7 +168,7 @@ shinyServer(function(input, output, session) {
 				
 				# assume that taxon group description is unique identifier for taxon
 				taxons <- getTaxonFromTaxonGroupTaxonId(
-					taxonId = possibleValues$taxonId,
+					taxonId = possibleValues$taxonId, # available for personKey
 					taxonGroup = input$soortgroep,
 					ch = ch)
 		
@@ -214,6 +217,7 @@ shinyServer(function(input, output, session) {
 						surveyId = selectedParams$surveyId,
 						locationId = selectedParams$locationId,
 						taxon = input$soort,
+						personKey = personKey,
 						ch = ch
 					)
 					
@@ -265,6 +269,7 @@ shinyServer(function(input, output, session) {
 						locationId = selectedParams$locationId,
 						taxonId = selectedParams$taxonId,
 						surveyseason = input$telseizoen,
+						personKey = personKey,
 						ch = ch
 					)			
 								

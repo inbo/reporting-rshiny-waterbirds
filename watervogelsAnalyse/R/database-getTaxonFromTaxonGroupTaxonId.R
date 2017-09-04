@@ -12,7 +12,7 @@
 getTaxonFromTaxonGroupTaxonId <- function(taxonId, taxonGroup, ch){
 	
 	# locationName -> locationId
-	taxons <- extractYFromYTable(
+	taxons <- extractYFromXTable(
 		x = list(
 			'TaxonGroupDescription' = taxonGroup,
 			'TaxonWVKey' = taxonId

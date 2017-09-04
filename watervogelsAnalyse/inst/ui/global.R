@@ -4,20 +4,25 @@ library(watervogelsAnalyse)
 # connect to the database
 library(RODBC)
 
-server <- FALSE
+server <- TRUE
 
-# currently placeholder for the connection
 if(server){
 	
+	# currently placeholder for the connection
 	ch <- odbcConnect(dsn = "[mySqlServerIP]", uid = "[userID]", pwd = "[pwd]")
 	
+	# get person key from user name
+	username <- Sys.getenv("SHINYPROXY_USERNAME")
+	personKey <- getPersonKey(ch = ch, username = username)
+		
 	# extract available projects
-	projects <- getProjects()
+	projects <- getProjects(ch, personKey = personKey)
 	
-	# extract unique teldatum per season
+	# extract unique teldatum per season (across persons)
 	teldatumSeasonDf <- getTeldatumSeason(ch)
 	
 }else{
+	
 	# load the data
 	dataTables <- readData()
 
@@ -44,3 +49,4 @@ if(server){
 #		"2009-10", "2010-11", "2011-12", "2012-13", "2013-14", 
 #		"2014-15", "2015-16")# occurrences$surveyseason, multiple
 #)
+# Sys.setenv(SHINYPROXY_USERNAME = "IN") # example person code for testing

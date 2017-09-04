@@ -9,7 +9,7 @@
 #' @inheritParams getQuery
 #' @importFrom RODBC sqlQuery
 #' @author Laure Cougnaud
-extractYFromYTable <- function(x, y, table, ch, distinct = FALSE, verbose = TRUE){
+extractYFromXTable <- function(x, y, table, ch, distinct = FALSE, verbose = TRUE){
 	
 	# build query
 	query <- getQuery(x = x, y = y, table = table, distinct = distinct)
