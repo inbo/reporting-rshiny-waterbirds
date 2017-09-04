@@ -49,4 +49,5 @@ if(server){
 #		"2009-10", "2010-11", "2011-12", "2012-13", "2013-14", 
 #		"2014-15", "2015-16")# occurrences$surveyseason, multiple
 #)
+#personKey <- 437
 # Sys.setenv(SHINYPROXY_USERNAME = "[email address]") # example person code for testing

@@ -27,7 +27,7 @@ getData <- function(surveyId, locationId, taxonId, surveyseason, personKey, ch){
 			'PersonKey' = personKey
 		), 
 		y = c('SurveyKey', 'LocationWVKey', 'TaxonWVKey', 'SeasonKey',
-			'SampleKey', 'SampleDate', 'TaxonCount'), 
+			'SampleKey', 'SampleDate', 'TaxonCount', 'EventKey'), 
 		table = "FactTaxonOccurrence"
 	)
 	resQuerySubset <- sqlQuery(ch, querySubsetCountTable, stringsAsFactors = FALSE)
@@ -38,7 +38,6 @@ getData <- function(surveyId, locationId, taxonId, surveyseason, personKey, ch){
 		getQueryJoin(tableX = "countTable", tableY = tableY, 
 			key = key, typeJoin = "left")
 	
-	# only missing column: 'telling'
 	columnsToSelect <- c(
 		# DimSurvey
 		'project' = "SurveyNaam",
@@ -46,6 +45,8 @@ getData <- function(surveyId, locationId, taxonId, surveyseason, personKey, ch){
 		'regio' = "RegioWVNaam", 'gebied' = "LocationWVNaam",
 		# DimSeason
 		'surveyseason' = "SeasonName",
+		# DimEvent
+		'telling' = "EventCode",
 		# DimSample
 		'teldatum' = "W0004_01_Waterbirds.dbo.DimSample.SampleDate", 
 		'tellingstatus' = "Samplestatus",
@@ -58,9 +59,10 @@ getData <- function(surveyId, locationId, taxonId, surveyseason, personKey, ch){
 		"SELECT", toString(columnsToSelect), "FROM",
 		"(", querySubsetCountTable, ")",
 		"AS countTable",
+		getQueryJoinCustom("W0004_01_Waterbirds.dbo.DimEvent", "EventKey"),
+		getQueryJoinCustom("W0004_01_Waterbirds.dbo.DimSeason", "SeasonKey"),
 		getQueryJoinCustom("W0004_01_Waterbirds.dbo.DimSample", "SampleKey"),
 		getQueryJoinCustom("W0004_01_Waterbirds.dbo.DimSurvey", "SurveyKey"),
-		getQueryJoinCustom("W0004_01_Waterbirds.dbo.DimSeason", "SeasonKey"),
 		getQueryJoinCustom("W0004_01_Waterbirds.dbo.DimLocationWV", "LocationWVKey"),
 		getQueryJoinCustom("W0004_01_Waterbirds.dbo.DimTaxonWV", "TaxonWVKey")
 	)
@@ -68,6 +70,9 @@ getData <- function(surveyId, locationId, taxonId, surveyseason, personKey, ch){
 	
 	# set names as previously exported data
 	colnames(resQueryJoin) <- names(columnsToSelect)
+	
+	# reformat telling as integer
+	resQueryJoin$telling <- as.integer(sub(".+([[:digit:]]{1,})", "\\1", resQueryJoin$telling))
 	
 	return(resQueryJoin)
 	
