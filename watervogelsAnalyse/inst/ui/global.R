@@ -8,8 +8,13 @@ server <- TRUE
 
 if(server){
 	
-	# currently placeholder for the connection
-	ch <- odbcConnect(dsn = "[mySqlServerIP]", uid = "[userID]", pwd = "[pwd]")
+	# extract credentials to the database
+	# TODO: the path should map the 'docker-volumes'
+	pathDockerVolume <- ""
+	credentials <- read.csv(file.path(pathDockerVolume, "credentials.txt"), stringsAsFactors = FALSE)
+	
+	# connect to the database
+	ch <- odbcConnect(dsn = "inbo-sql05-dev", uid = credentials$uid, pwd = credentials$pwd)
 	
 	# get person key from user login (email adress)
 	userEmail <- Sys.getenv("SHINYPROXY_USERNAME")
