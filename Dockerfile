@@ -11,19 +11,15 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libssh2-1-dev \
     tk-dev \
-    libssl1.0.0
+    libssl1.0.0 \
+    unixodbc \
+    freetds-bin \
+    tdsodbc
     
 RUN wget https://github.com/jgm/pandoc/releases/download/1.17.2/pandoc-1.17.2-1-amd64.deb
 RUN dpkg -i pandoc-1.17.2-1-amd64.deb  
 
-### configure connection to the database  
-    
-### install packages
-
-# install extra softwares
-sudo apt install unixodbc freetds-bin tdsodbc
-
-# configure properly the files
+### configure connection to the database
 
 # configuration of FreeTDS in the 'odbcinst.ini' file 
 RUN echo -e "[FreeTDS]
