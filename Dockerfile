@@ -14,11 +14,41 @@ RUN apt-get update && apt-get install -y \
     libssl1.0.0
     
 RUN wget https://github.com/jgm/pandoc/releases/download/1.17.2/pandoc-1.17.2-1-amd64.deb
-RUN dpkg -i pandoc-1.17.2-1-amd64.deb    
+RUN dpkg -i pandoc-1.17.2-1-amd64.deb  
+
+### configure connection to the database  
     
 ### install packages
 
-# dependencies
+# install extra softwares
+sudo apt install unixodbc freetds-bin tdsodbc
+
+# configure properly the files
+
+# configuration of FreeTDS in the 'odbcinst.ini' file 
+RUN echo -e "[FreeTDS]
+Description = FreeTDS Driver v0.91
+Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so
+fileusage=1
+dontdlclose=1
+UsageCount=1" >> /etc/odbcinst.ini
+
+# append DSN configuration to the 'freetds.conf' file (path might be system-specific)
+RUN echo -e "[inbo-sql05-dev]
+host = 172.28.11.46
+port = 1435
+tds version = 4.2" >> /usr/local/etc/freetds.conf
+
+# append DSN configuration in 'odbc.ini' file
+RUN echo -e "[inbo-sql05-dev]
+Driver = FreeTDS
+Description = Development server
+Trace = No
+Server = 172.28.11.46
+Port = 1435
+Database = W0004_01_Waterbirds
+TDS_Version = 4.2" >> /etc/odbc.ini
 
 # package
 RUN R -e "install.packages(c('ggplot2', 'plotly', 'shiny'), repos = 'https://cloud.r-project.org')"
