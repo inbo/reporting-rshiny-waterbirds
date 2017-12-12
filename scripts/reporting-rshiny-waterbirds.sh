@@ -6,4 +6,4 @@ if [ -f reporting-rshiny-waterbirds.tar.gz ]; then
 fi
 tar -zcvf reporting-rshiny-waterbirds.tar.gz watervogelsAnalyse
 # Build the docker image
-sudo docker build -t openanalytics/watervogels .
+sudo docker build --no-cache -t openanalytics/watervogels .
