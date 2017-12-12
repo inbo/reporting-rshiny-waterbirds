@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libssh2-1-dev \
     tk-dev \
-    libssl1.0.0
+    libssl1.0.0 \
+    r-cran-rodbc
     
 RUN wget https://github.com/jgm/pandoc/releases/download/1.17.2/pandoc-1.17.2-1-amd64.deb
 RUN dpkg -i pandoc-1.17.2-1-amd64.deb    
@@ -28,9 +29,6 @@ RUN R -e "install.packages(c('plyr', 'rmarkdown'), repos = 'https://cloud.r-proj
 
 # report
 RUN R -e "install.packages('DT', repos = 'https://cloud.r-project.org')"
-
-# RODBC database connection
-RUN R -e "install.packages('RODBC', repos = 'https://cloud.r-project.org')"
 
 # package
 COPY ./reporting-rshiny-waterbirds.tar.gz /root/
