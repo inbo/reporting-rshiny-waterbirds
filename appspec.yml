@@ -4,6 +4,9 @@ files:
   - source: /
     destination: /home/ubuntu/reporting-rshiny-waterbirds
 hooks:
+  BeforeInstall:
+    - location: scripts/cleanup-reporting-rshiny-waterbirds.sh
+      timeout: 300
   AfterInstall:
     - location: scripts/reporting-rshiny-waterbirds.sh
       timeout: 1000
